@@ -6,8 +6,8 @@ import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 //Import routes
-import blogRoutes from "./routes/blogRoutes.js";
-import userRoute from "./routes/userroutes.js";
+import blogRoutes from "./routes/blogRoutes";
+import userRoute from "./routes/userroutes";
 import mongoose from "mongoose";
 
 mongoose.set("strictQuery", false);
