@@ -3,6 +3,7 @@ import {
     userSignUp,
     viewAllUsers,
     userUpdate,
+    deleteUserById,
     userLoginFunction,
  } from "../controller/usercontroller";
  import fileUpload from "../helper/multer";
@@ -11,4 +12,5 @@ import {
     userRoute.get("/read", viewAllUsers);
     userRoute.put("/update/:id", fileUpload.single("Profile"), userUpdate);
     userRoute.post("/login",fileUpload.single("Profile"), userLoginFunction);
+    userRoute.delete("/DeleteUser/:id",deleteUserById);
  export default userRoute;

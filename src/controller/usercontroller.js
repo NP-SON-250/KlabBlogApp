@@ -155,3 +155,31 @@ export const viewAllUsers = async (req,res) =>{
    
   }
  };
+
+ // delete user
+
+ export const deleteUserById = async (req, res) =>{
+  try {
+    const {id} = req.params;
+    const findid = await userModel.findById(id);
+    if(!findid)
+    return res.status(404).json({
+      statusbar: "404",
+      message: "User Id Not Found",
+});
+const deletefoundid = await userModel.findByIdAndDelete(id);
+return res.status(200).json({
+  statusbar: "200",
+  message: "User Deleted Successfully",
+  data: deletefoundid,
+});
+  } catch (error) {
+    return res.status(500).json({
+      statusbar: "500",
+      message: "Error Occured",
+      error: error.message,
+  
+    });
+    
+  }
+};
