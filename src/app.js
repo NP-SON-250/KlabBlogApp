@@ -3,13 +3,21 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
-
+import swaggerUi from "swagger-ui-express";
+import swaggerJSDoc from "swagger-jsdoc";
 //Import routes
 import blogRoutes from "./routes/blogRoutes";
 import userRoute from "./routes/userroutes";
+import mongoose from "mongoose";
 
+mongoose.set("strictQuery", false);
 
-//configurations
+mongoose
+  .connect(process.env.DbConnection)
+  .then(() => {
+    console.log("Database Connection Successeed");
+  })
+  .catch((err) => console.log(err));
 
 const app = express();
 dotenv.config();
@@ -19,14 +27,14 @@ dotenv.config();
 app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
-//Determination of routes
+//Routes
 
-app.use("/api/klab/blog",blogRoutes);
-app.use("/api/klab/user",userRoute);
+app.use("/api/klab/blog", blogRoutes);
+app.use("/api/klab/user", userRoute);
 
-app.get('/',(req,res) =>{
+app.get("/", (req, res) => {
   res.status(200).json({
     status: "Deal Done Friend",
     author: "Alexis",
@@ -34,4 +42,8 @@ app.get('/',(req,res) =>{
   });
 });
 
-export default app;
+const PORT = process.env.PORT || 4300;
+
+app.listen(process.env.PORT, () => {
+  console.log(`Server running on Port:http://localhost:${PORT}`);
+});
