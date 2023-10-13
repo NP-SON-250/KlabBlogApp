@@ -164,3 +164,44 @@ return res.status(200).json({
   
  }
 };
+// Creatin users comment on Each Blog
+export const createComment = async (req, res) => {
+
+  try {
+    // if (!req.userModel) {
+    //   return res.status(401).json({
+    //     status: "401",
+    //     message: "Unauthorized. Please login to leave a comment.",
+    //   });
+    // }
+    const { id } = req.params;
+    const { comment } = req.body;
+    
+    const blog = await blogmode.findById(id);
+    if (!blog) {
+      return res.status(404).json({
+        message: "Blog not found",
+      });
+    }
+    
+    const newComment = {
+      //email: req.userModel.email, // Assuming you have a user model with "email" field
+      comment,
+    };
+    
+    blog.comments.push(newComment);
+    await blog.save();
+    
+    return res.status(200).json({
+      status: "200",
+      message: "Comment added successfully",
+      data: newComment,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "500",
+      message: "Failed to add comment",
+      error: error.message,
+    });
+  }
+};

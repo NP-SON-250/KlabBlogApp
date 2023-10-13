@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const blogschema = new mongoose.Schema({
   bogImage: {
     type: String,
-    require: false,
+    require: true,
   },
   blogTitle: {
     type: String,
@@ -13,10 +13,13 @@ const blogschema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  blogComment: {
-    type: String,
-    require: false,
-  },
+  comments: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Users_Table'
+    },
+    comment: String
+  }],
   author: {
     type: String,
     require: false,

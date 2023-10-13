@@ -22,6 +22,42 @@ mongoose
 const app = express();
 dotenv.config();
 
+//Documentation Side
+
+const options ={
+  definition: {
+    openapi : '3.0.0',
+    info : {
+      title: 'Node JS And Mongo DB Klab Blog Api Project',
+      version: '1.0.0'
+    },
+    servers:[
+      {
+        url: 'https://klab-blog-api.onrender.com/'
+      }
+    ],
+    security: [
+      {
+        BearerAuth: [],
+      },
+    ],
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    }
+  },
+
+  apis: ['./src/Docs/*.js'], //determination of path
+}
+const swaggerSpec = swaggerJSDoc(options)
+app.use('/Docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+
+
 // Require app to use imported configurations
 
 app.use(cors());
