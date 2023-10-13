@@ -168,12 +168,12 @@ return res.status(200).json({
 export const createComment = async (req, res) => {
 
   try {
-    // if (!req.userModel) {
-    //   return res.status(401).json({
-    //     status: "401",
-    //     message: "Unauthorized. Please login to leave a comment.",
-    //   });
-    // }
+    if (!req.userModel) {
+      return res.status(401).json({
+        status: "401",
+        message: "Unauthorized. Please login to leave a comment.",
+      });
+    }
     const { id } = req.params;
     const { comment } = req.body;
     

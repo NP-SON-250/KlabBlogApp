@@ -96,16 +96,11 @@
  * @swagger
  * /api/klab/user/login:
  *   post:
- *     summary: User Login Here
  *     tags:
  *       - User
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: Blog ID to comment on
- *         schema:
- *           type: string
+ *     summary: User Login in 
+ *     consumes:
+ *       - multipart/form-data
  *     requestBody:
  *       required: true
  *       content:
