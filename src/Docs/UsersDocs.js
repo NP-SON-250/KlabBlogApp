@@ -186,6 +186,8 @@
  *                 type: string
  *               email:
  *                 type: string
+ *               Password:
+ *                 type: string
  *               role:
  *                 type: string
  *                 required: true
