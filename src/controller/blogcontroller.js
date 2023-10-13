@@ -185,7 +185,7 @@ export const createComment = async (req, res) => {
     }
     
     const newComment = {
-      //email: req.userModel.email, // Assuming you have a user model with "email" field
+      email: req.userModel.email, 
       comment,
     };
     

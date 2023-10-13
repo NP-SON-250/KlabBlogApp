@@ -114,6 +114,7 @@ export const viewAllUsers = async (req,res) =>{
     const getId = await userModel.findById(id);
     if (!getId)
       return res.status(404).json({
+        satus:"404",
         message: "User Id Not Found",
         
       });
@@ -131,12 +132,12 @@ export const viewAllUsers = async (req,res) =>{
         const encryptpass = await bcrypt.genSalt(10);
         const hashedpass = await bcrypt.hash(Password,encryptpass);
       if(req.file) result = await uploadToCloud(req.file, res);
-      const blogUpdate = await userModel.findByIdAndUpdate(id, {
-        Profile:  result?.secure_url,
+      const userUpdate = await userModel.findByIdAndUpdate(id, {
         First_Name,
         Last_Name, 
         email,
         Password: hashedpass,
+        Profile:  result?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
         role,
       })
  
