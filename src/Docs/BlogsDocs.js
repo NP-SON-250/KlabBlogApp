@@ -46,7 +46,9 @@
  *                     blogContent:
  *                       type: string
  *                       example: "Content of the blog post"
-
+ * /
+ /**
+ * @swagger
  * /api/klab/blog/readAllBlogs:
  *   get:
  *     summary: Get all blog posts
@@ -86,6 +88,9 @@
  *                 message:
  *                   type: string
  *                   example: "No blogs found"
+ * /
+ /**
+ * @swagger
  * /api/klab/blog/readById/{id}:
  *   get:
  *     summary: Get a blog post by ID
@@ -128,6 +133,9 @@
  *                 message:
  *                   type: string
  *                   example: "Blog post not found"
+ * /
+ /**
+ * @swagger
  * /api/klab/blog/updateBlog/{id}:
  *   put:
  *     summary: Update a blog post by ID
@@ -183,6 +191,9 @@
  *                 message:
  *                   type: string
  *                   example: "Blog post not found"
+ * /
+ /**
+ * @swagger
  * /api/klab/blog/deleteBlog/{id}:
  *   delete:
  *     summary: Delete a blog post by ID
@@ -234,6 +245,9 @@
  *                 message:
  *                   type: string
  *                   example: "Blog post not found"
+ * /
+ /**
+ * @swagger
  * /api/api/klab/blog/{id}/comment:
  *   post:
  *     summary: Create a comment on a blog post

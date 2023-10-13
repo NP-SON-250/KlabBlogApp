@@ -155,6 +155,9 @@
  *                 message:
  *                   type: string
  *                   example: "Incorrect email or password"
+ * /
+ /**
+ * @swagger
  * /api/klab/user/update/{id}:
  *   put:
  *     summary: Update a user by ID
@@ -215,6 +218,9 @@
  *                     Profile:
  *                       type: string
  *                       example: http://example.com/new_profile.jpg
+ * /
+ /**
+ * @swagger
  * /api/klab/user/DeleteUser/{id}:
  *   delete:
  *     summary: Delete a user by ID
