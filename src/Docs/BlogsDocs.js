@@ -46,7 +46,11 @@
  *                     blogContent:
  *                       type: string
  *                       example: "Content of the blog post"
- * /
+ */
+
+
+
+
  /**
  * @swagger
  * /api/klab/blog/readAllBlogs:
@@ -88,7 +92,9 @@
  *                 message:
  *                   type: string
  *                   example: "No blogs found"
- * /
+ */
+
+
  /**
  * @swagger
  * /api/klab/blog/readById/{id}:
@@ -133,7 +139,9 @@
  *                 message:
  *                   type: string
  *                   example: "Blog post not found"
- * /
+ */
+
+
  /**
  * @swagger
  * /api/klab/blog/updateBlog/{id}:
@@ -191,7 +199,9 @@
  *                 message:
  *                   type: string
  *                   example: "Blog post not found"
- * /
+ */
+
+
  /**
  * @swagger
  * /api/klab/blog/deleteBlog/{id}:
@@ -245,7 +255,9 @@
  *                 message:
  *                   type: string
  *                   example: "Blog post not found"
- * /
+ */
+
+ 
  /**
  * @swagger
  * /api/api/klab/blog/{id}/comment:

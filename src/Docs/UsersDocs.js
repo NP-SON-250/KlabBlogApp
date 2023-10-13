@@ -1,4 +1,6 @@
 // Get all Users Registered
+
+
 /**
  * @swagger
  * /api/klab/user/createuser:
@@ -55,7 +57,9 @@
  *                       type: string
  *                     Profile:
  *                       type: string
- * /
+ */
+
+
  /**
  * @swagger
  * /api/klab/user/read:
@@ -85,7 +89,9 @@
  *                   Profile:
  *                     type: string
  *                     example: http://example.com/profile.jpg
- * /
+ */
+
+
  /**
  * @swagger
  * /api/klab/user/login:
@@ -155,7 +161,9 @@
  *                 message:
  *                   type: string
  *                   example: "Incorrect email or password"
- * /
+ */
+
+
  /**
  * @swagger
  * /api/klab/user/update/{id}:
@@ -218,7 +226,9 @@
  *                     Profile:
  *                       type: string
  *                       example: http://example.com/new_profile.jpg
- * /
+ */
+
+
  /**
  * @swagger
  * /api/klab/user/DeleteUser/{id}:
