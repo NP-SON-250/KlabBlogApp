@@ -22,7 +22,7 @@ export const createBlog = async (req, res) =>{
     blogTitle,
     blogContent,
     blogComment: [{
-      user: String,  // Assuming you want to store the username of the commenter
+      user: String,  
       comment: String
     }],
     author: req.userModel.First_Name,
@@ -35,7 +35,7 @@ export const createBlog = async (req, res) =>{
   })
   } catch (error) {
     return res.status(500).json({
-      statusbar: "Failed",
+      statusbar: "500",
       message: "Failied To Create Blog",
       error: error.message,
     });
@@ -76,19 +76,49 @@ export const blogById = async (req,res) =>{
 
     }
     return res.status(200).json({
-      statusbar: "Blog Id Found",
-      message: "Congratrations",
+      statusbar: "200",
+      message: "Here is information About Blog For Entered ID",
       data: blogid,
     })
   } catch (error) {
     return res.status(500).json({
-      statusbar: "Failed",
-      message: "Id Not Found 🤦‍♀️🤦‍♀️",
+      statusbar: "500",
+      message: "Failed to load data",
       error: error.message,
     });
     
   }
 };
+
+// Finding Blog By title
+
+export const searchBlog = async (req, res) =>{
+  try {
+    const { blogTitle } = req.params;
+    const readTitle = await blogmode.findOne(blogTitle);
+    if(!readTitle){
+      return res.status(404).json({
+        status: "404",
+        message: "Blog title not found",
+      });
+    }else{
+    return res.status(200).json({
+      status: "200",
+      message: "Here is information about blog for entered title",
+      data: readTitle,
+    });
+  }
+  } catch (error) {
+    return res.status(500).json({
+      statu: "500",
+      message: "Failed to load data",
+      error: error.message,
+
+    });
+    
+  }
+};
+
 // Deleting Blog By Blog Id
 
 export const deleteBlogById = async (req, res) =>{
@@ -126,6 +156,7 @@ return res.status(200).json({
    const getId = await blogmode.findById(id);
    if (!getId)
      return res.status(404).json({
+       status: "404",
        message: "Id not Found",
        
      });
@@ -164,44 +195,33 @@ return res.status(200).json({
   
  }
 };
-// Creatin users comment on Each Blog
-export const createComment = async (req, res) => {
 
+//creating a comment on blog
+
+
+export const createComment = async (req, res) => {
   try {
-    if (!req.userModel) {
-      return res.status(401).json({
-        status: "401",
-        message: "Unauthorized. Please login to leave a comment.",
-      });
-    }
     const { id } = req.params;
-    const { comment } = req.body;
-    
+    const { UserComment } = req.body;
     const blog = await blogmode.findById(id);
+
     if (!blog) {
-      return res.status(404).json({
-        message: "Blog not found",
-      });
+      return res.status(404).json({ status: "404",message: "Blog not found" });
     }
-    
-    const newComment = {
-      email: req.userModel.email, 
-      comment,
+
+    const comment = {
+      UserComment,
+      User_ID: req.userModel._id, 
+      User_Name: req.userModel.First_Name,
+      User_Email: req.userModel.Profile,
     };
-    
-    blog.comments.push(newComment);
-    await blog.save();
-    
-    return res.status(200).json({
-      status: "200",
-      message: "Comment added successfully",
-      data: newComment,
-    });
+
+    blog.comments.push(comment);
+    await blog.save(); 
+
+    return res.status(200).json({ status: "200", message: "Comment added successfully" });
   } catch (error) {
-    return res.status(500).json({
-      status: "500",
-      message: "Failed to add comment",
-      error: error.message,
-    });
+    return res.status(500).json({status: "500" ,message: "Failed to add comment", error: error.message });
   }
 };
+

@@ -25,7 +25,7 @@
  *                 type: string
  *               Profile:
  *                 type: string
- *                 format: binary  # This indicates that it's expecting a file
+ *                 format: binary  
  *             required:
  *               - First_Name
  *               - Last_Name
@@ -79,16 +79,12 @@
  *                 properties:
  *                   First_Name:
  *                     type: string
- *                     example: John
  *                   Last_Name:
  *                     type: string
- *                     example: Doe
  *                   email:
  *                     type: string
- *                     example: john.doe@example.com
  *                   Profile:
  *                     type: string
- *                     example: http://example.com/profile.jpg
  */
 
 

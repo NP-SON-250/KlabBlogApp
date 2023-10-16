@@ -15,7 +15,7 @@
  *             properties:
  *               bogImage:
  *                 type: string
- *                 format: binary  # This indicates that it's expecting a file
+ *                 format: binary  
  *               blogTitle:
  *                 type: string
  *               blogContent:
@@ -165,13 +165,11 @@
  *             properties:
  *               bogImage:
  *                 type: string
- *                 format: binary  # This indicates that it's expecting a file
+ *                 format: binary  
  *               blogTitle:
  *                 type: string
- *                 example: "Updated Title of the Blog"
  *               blogContent:
  *                 type: string
- *                 example: "Updated Content of the blog post"
  *     responses:
  *       200:
  *         description: Blog post updated successfully
@@ -258,7 +256,7 @@
  */
 
  
- /**
+/**
  * @swagger
  * /api/api/klab/blog/{id}/comment:
  *   post:
@@ -279,9 +277,9 @@
  *           schema:
  *             type: object
  *             properties:
- *               comment:
+ *               UserComment:
  *                 type: string
- *                 name: Comment
+ *                 format: binary
  *     responses:
  *       200:
  *         description: Comment added successfully
@@ -302,21 +300,8 @@
  *                     comment:
  *                       type: string
  *                       example: "Great blog post!"
- *       401:
- *         description: Unauthorized. Please login to leave a comment.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: "401"
- *                 message:
- *                   type: string
- *                   example: "Unauthorized. Please login to leave a comment."
  *       404:
- *         description: Blog post not found
+ *         description: Blog not found
  *         content:
  *           application/json:
  *             schema:
@@ -327,5 +312,19 @@
  *                   example: "404"
  *                 message:
  *                   type: string
- *                   example: "Blog post not found"
+ *                   example: "Blog not found"
+ *       500:
+ *         description: Error adding comment
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "500"
+ *                 message:
+ *                   type: string
+ *                   example: "Error adding comment"
  */
+

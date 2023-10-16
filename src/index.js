@@ -3,12 +3,13 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
+import mongoose from "mongoose";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 //Import routes
 import blogRoutes from "./routes/blogRoutes";
 import userRoute from "./routes/userroutes";
-import mongoose from "mongoose";
+import contactRouter from "./routes/contactRoutes";
 
 mongoose.set("strictQuery", false);
 
@@ -69,12 +70,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/api/klab/blog", blogRoutes);
 app.use("/api/klab/user", userRoute);
-
+app.use("api/klab/contact", contactRouter);
 app.get("/", (req, res) => {
   res.status(200).json({
-    status: "Deal Done Friend",
+    status: "200",
     author: "Alexis",
-    message: "Welcome To Alexis API",
+    message: "Welcome To Blog API",
   });
 });
 

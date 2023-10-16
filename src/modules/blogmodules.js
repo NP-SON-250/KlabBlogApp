@@ -1,25 +1,28 @@
 import mongoose from "mongoose";
+const { ObjectId } = mongoose.Schema;
+
+const commentSchema = new mongoose.Schema({
+  UserComment: {
+    type: String,
+    require: true,
+  },
+  User_ID: { type: ObjectId, ref: "User_Table" },
+  CommentDate: { type: Date, default: Date.now },
+  User_Name: {type: String, ref: "User_Table"},
+  User_Email: {type: String, ref: "User_Table"},
+});
 
 const blogschema = new mongoose.Schema({
   bogImage: {
     type: String,
-    require: true,
-  },
+    require: true,   },
   blogTitle: {
     type: String,
-    require: true,
-  },
+    require: true,   },
   blogContent: {
     type: String,
-    require: true,
-  },
-  comments: [{
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Users_Table'
-    },
-    comment: String
-  }],
+    require: true,   },
+  PostedOn: { type: Date, default: Date.now },
   author: {
     type: String,
     require: false,
@@ -28,6 +31,7 @@ const blogschema = new mongoose.Schema({
     type: String,
     require: false,
   },
+  comments: [commentSchema] // Added comments array using the commentSchema
 });
 
 const blogmode = mongoose.model("Blogs", blogschema);

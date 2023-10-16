@@ -137,7 +137,7 @@ export const viewAllUsers = async (req,res) =>{
         Last_Name, 
         email,
         Password: hashedpass,
-        Profile:  result?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
+        Profile:  result?.secure_url,
         role,
       })
  
