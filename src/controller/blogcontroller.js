@@ -213,7 +213,7 @@ export const createComment = async (req, res) => {
       UserComment,
       User_ID: req.userModel._id, 
       User_Name: req.userModel.First_Name,
-      User_Email: req.userModel.Profile,
+      User_Email: req.userModel.email,
     };
 
     blog.comments.push(comment);
