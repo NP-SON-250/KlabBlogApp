@@ -258,7 +258,7 @@
  
 /**
  * @swagger
- * /api/api/klab/blog/{id}/comment:
+ * /api/klab/blog/{id}/comment:
  *   post:
  *     summary: Create a comment on a blog post
  *     tags:
