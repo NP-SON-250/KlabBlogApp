@@ -279,7 +279,6 @@
  *             properties:
  *               UserComment:
  *                 type: string
- *                 format: binary
  *     responses:
  *       200:
  *         description: Comment added successfully
