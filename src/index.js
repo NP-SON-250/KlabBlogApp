@@ -9,7 +9,8 @@ import swaggerJSDoc from "swagger-jsdoc";
 //Import routes
 import blogRoutes from "./routes/blogRoutes";
 import userRoute from "./routes/userroutes";
-import contactRouter from "./routes/contactRoutes";
+// import contactRouter from "./routes/contactRoutes";
+import contactusRoute from "./routes/contactRoutesCorrect";
 
 mongoose.set("strictQuery", false);
 
@@ -70,7 +71,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/api/klab/blog", blogRoutes);
 app.use("/api/klab/user", userRoute);
-app.use("api/klab/contact", contactRouter);
+// app.use("/api/klab/contact", contactRouter);
+
+app.use("/api/klab/contactus", contactusRoute);
 app.get("/", (req, res) => {
   res.status(200).json({
     status: "200",

@@ -1,5 +1,6 @@
 import blogmode from "../modules/blogmodules";
 import { uploadToCloud } from "../helper/cloud";
+import comments from "../modules/commentModel";
 
 //Creating Blog
 
@@ -48,7 +49,7 @@ export const allBlogs = async (req,res) =>{
   try {
     const gettaallinfo = await blogmode.find();
     return res.status(200).json({
-      statusbar: "You Made It",
+      status: "200",
       message: "All Blogs Are here:",
       data: gettaallinfo,
     })
@@ -217,7 +218,7 @@ export const createComment = async (req, res) => {
     };
 
     blog.comments.push(comment);
-    await blog.save(); 
+    await blog.save();
 
     return res.status(200).json({ status: "200", message: "Comment added successfully" });
   } catch (error) {
@@ -225,4 +226,58 @@ export const createComment = async (req, res) => {
   }
 };
 
-// Commenting
+
+// create comment
+
+export const makeComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userModel } = req;
+    const { Comment } = req.body;
+    const blog = await blogmode.findById(id);
+    if (!blog) {
+      return res.status(404).json({
+        status: "404",
+        message: "Blog ID Not found",
+      });
+    }
+    const comments = await comments.create({
+      Comment,
+      User_ID: userModel._id,
+      author_Name: userModel.Last_Name,
+      Blog_Id: blog._id,
+    });
+    blog.comments.push(comment);
+    await blog.save();
+    return res.status(200).json({
+      status: "200",
+      message: "Comment Sent Succefully",
+      data: comments,
+    });
+  } catch (error) {
+    return res.status(201).json({
+      status: "201",
+      message: "Failed to comment",
+      error: error.message,
+    });
+  }
+};
+
+// fetch comments
+export const allcomment = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const gettallcomment = await comments.find().populate("bogImage","blogTitle","blogContent","PostedOn","User_ID","Firt_Name" ,"Last_Name" ,"Profile");
+    return res.status(200).json({
+      status: "200",
+      message: "Here are all comments:",
+      data: gettallcomment,
+    });
+  } catch (error) {
+    console.log(error.message)
+    return res.status(500).json({
+      status: "500",
+      message: "fail to fetch Data",
+    });
+  }
+};

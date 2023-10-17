@@ -11,7 +11,7 @@ const commentSchema = new mongoose.Schema({
   User_Name: {type: String, ref: "User_Table"},
   User_Email: {type: String, ref: "User_Table"},
 });
-
+const Comments = mongoose.model("Comment",commentSchema);
 const blogschema = new mongoose.Schema({
   bogImage: {
     type: String,
