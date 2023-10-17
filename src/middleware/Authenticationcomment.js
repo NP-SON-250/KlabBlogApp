@@ -29,7 +29,7 @@ const CommentPermit = async (req, res, next) => {
       });
     }
 
-    if (logedUser.role !== "admin") {
+    if (logedUser.role !== "user") {
       res.status(404).json({
         status: "404",
         message: "Login as normal user to comment on blog",
