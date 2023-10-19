@@ -6,11 +6,13 @@ import cors from "cors";
 import mongoose from "mongoose";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
-//Import routes
-import blogRoutes from "./routes/blogRoutes";
-import userRoute from "./routes/userroutes";
-// import contactRouter from "./routes/contactRoutes";
-import contactusRoute from "./routes/contactRoutesCorrect";
+
+import usersRoute from "./routes/userRoute";
+import postRoute from "./routes/postRoute";
+import commentRoute from "./routes/commentRoute";
+
+const app = express();
+dotenv.config();
 
 mongoose.set("strictQuery", false);
 
@@ -21,8 +23,7 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-const app = express();
-dotenv.config();
+
 
 //Documentation Side
 
@@ -35,7 +36,8 @@ const options ={
     },
     servers:[
       {
-        url: 'https://klab-blog-api.onrender.com/'
+        // url: 'https://klab-blog-api.onrender.com/'
+        url: 'http://localhost:4100'
       }
     ],
     security: [
@@ -54,10 +56,10 @@ const options ={
     }
   },
 
-  apis: ['./src/Docs/*.js'], //determination of path
+  apis: ['./src/docs/*.js'], //determination of path
 }
 const swaggerSpec = swaggerJSDoc(options)
-app.use('/Docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 
 // Require app to use imported configurations
@@ -67,17 +69,15 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-//Routes
+// //Routes
+app.use("/Blog/API", usersRoute);
+app.use("/Blog/API",postRoute);
+app.use("/Blog/API", commentRoute);
 
-app.use("/api/klab/blog", blogRoutes);
-app.use("/api/klab/user", userRoute);
-// app.use("/api/klab/contact", contactRouter);
-
-app.use("/api/klab/contactus", contactusRoute);
 app.get("/", (req, res) => {
   res.status(200).json({
     status: "200",
-    author: "Alexis",
+    author: "Alexis Hakizimana",
     message: "Welcome To Blog API",
   });
 });

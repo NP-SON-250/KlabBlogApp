@@ -1,7 +1,7 @@
 
 import  Jwt  from "jsonwebtoken";
-import userModel from "../modules/users";
-const CommentPermit = async (req, res, next) => {
+import Users from "../model/userModel";
+const commentsAuthorization = async (req, res, next) => {
   let token;
 
   try {
@@ -20,7 +20,7 @@ const CommentPermit = async (req, res, next) => {
     }
 
     const decoded = await Jwt.verify(token, process.env.JWT_SECRET);
-    const logedUser = await userModel.findById(decoded.id);
+    const logedUser = await Users.findById(decoded.id);
 
     if (!logedUser) {
       res.status(403).json({
@@ -29,15 +29,8 @@ const CommentPermit = async (req, res, next) => {
       });
     }
 
-    if (logedUser.role !== "user") {
-      res.status(404).json({
-        status: "404",
-        message: "Login as normal user to comment on blog",
-      });
-    } else {
-      req.userModel = logedUser;
+      req.Users = logedUser;
       next();
-    }
 
   } catch (error) {
     res.status(500).json({
@@ -47,7 +40,7 @@ const CommentPermit = async (req, res, next) => {
   }
 };
 
-export default CommentPermit;
+export default commentsAuthorization;
 
 
 
