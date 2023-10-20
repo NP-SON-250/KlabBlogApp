@@ -13,8 +13,8 @@ const Authorization = async (req, res, next) => {
     }
 
     if (!token) {
-      res.status(404).json({
-        status: "404",
+      res.status(401).json({
+        status: "401",
         message: "You Are Not Logged In Please login",
       });
     }
@@ -30,8 +30,8 @@ const Authorization = async (req, res, next) => {
     }
 
     if (logedUser.Role !== "admin") {
-      res.status(404).json({
-        status: "404",
+      res.status(401).json({
+        status: "401",
         message: "Only Admin can do this operation",
       });
     } else {

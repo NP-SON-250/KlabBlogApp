@@ -31,7 +31,7 @@ const options ={
   definition: {
     openapi : '3.0.0',
     info : {
-      title: 'Node JS And Mongo DB Klab Blog Api Project',
+      title: 'Klab Blog API Node JS',
       version: '1.0.0'
     },
     servers:[

@@ -1,12 +1,11 @@
 /**
  * @swagger
- * /Blog/API/login:
+ * /Blog/API/post/create:
  *   post:
- *     summary: User login
- *     tags: 
- *       - User
- *     consumes:
- *       - multipart/form-data
+ *     summary: Create a new post
+ *     tags: [Post]
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -14,15 +13,19 @@
  *           schema:
  *             type: object
  *             properties:
- *               Email:
+ *               Post_Image:
  *                 type: string
- *               Password:
+ *                 format: binary
+ *                 description: The image for the post (optional)
+ *               Post_Title:
  *                 type: string
- *               Profile:
+ *                 description: Title of the post
+ *               Post_Content:
  *                 type: string
+ *                 description: Content of the post
  *     responses:
- *       200:
- *         description: Successful user login
+ *       '201':
+ *         description: Post created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -30,25 +33,12 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '201'
  *                 message:
  *                   type: string
- *                 users:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                     First_Name:
- *                       type: string
- *                     Last_Name:
- *                       type: string
- *                     Email:
- *                       type: string
- *                     Role:
- *                       type: string
- *                 token:
- *                   type: string
- *       400:
- *         description: Invalid request format
+ *                   example: 'Post created successfully'
+ *       '400':
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
@@ -56,10 +46,12 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '400'
  *                 message:
  *                   type: string
- *       404:
- *         description: User not found or incorrect password
+ *                   example: 'Post Title Exist in database Or other validation error'
+ *       '500':
+ *         description: Server error
  *         content:
  *           application/json:
  *             schema:
@@ -67,71 +59,27 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '500'
  *                 message:
  *                   type: string
- *       500:
- *         description: Failed to process login request
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                 message:
- *                   type: string
- *                 error:
- *                   type: string
+ *                   example: 'Failed to create post'
  */
-
 
 /**
  * @swagger
- * /Blog/API/allPosts:
+ * /Blog/API/post/get/all:
  *   get:
  *     summary: Get all posts
- *     tags:
- *       - Post
- *     security:
- *       - BearerAuth: []
+ *     tags: [Post]
  *     responses:
- *       200:
+ *       '200':
  *         description: Posts retrieved successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                 message:
- *                   type: string
- *                 data:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                       Post_Image:
- *                         type: string
- *                       Post_Title:
- *                         type: string
- *                       Post_Content:
- *                         type: string
- *                       Posted_On:
- *                         type: string
- *                       Posted_By:
- *                         type: object
- *                         properties:
- *                           _id:
- *                             type: string
- *                           First_Name:
- *                             type: string
- *                           Last_Name:
- *                             type: string
- *       403:
- *         description: Unauthorized Access
+ *               type: array
+ *       '500':
+ *         description: Server error
  *         content:
  *           application/json:
  *             schema:
@@ -139,42 +87,27 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '500'
  *                 message:
  *                   type: string
- *       500:
- *         description: Failed to retrieve posts
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                 message:
- *                   type: string
- *                 error:
- *                   type: string
+ *                   example: 'Failed to retrieve posts'
  */
-
 
 /**
  * @swagger
- * /Blog/API/post/{id}:
+ * /Blog/API/post/ge/{id}:
  *   get:
  *     summary: Get a specific post by ID
- *     tags:
- *       - Post
- *     security:
- *       - BearerAuth: []
+ *     tags: [Post]
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
- *         description: Post ID
+ *         required: true
+ *         description: ID of the post to retrieve
  *     responses:
- *       200:
+ *       '200':
  *         description: Post retrieved successfully
  *         content:
  *           application/json:
@@ -183,31 +116,11 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '200'
  *                 message:
  *                   type: string
- *                 data:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                     Post_Image:
- *                       type: string
- *                     Post_Title:
- *                       type: string
- *                     Post_Content:
- *                       type: string
- *                     Posted_On:
- *                       type: string
- *                     Posted_By:
- *                       type: object
- *                       properties:
- *                         _id:
- *                           type: string
- *                         First_Name:
- *                           type: string
- *                         Last_Name:
- *                           type: string
- *       404:
+ *                   example: 'Post retrieved successfully'
+ *       '404':
  *         description: Post not found
  *         content:
  *           application/json:
@@ -216,10 +129,12 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '404'
  *                 message:
  *                   type: string
- *       500:
- *         description: Failed to retrieve post
+ *                   example: 'Post not found'
+ *       '500':
+ *         description: Server error
  *         content:
  *           application/json:
  *             schema:
@@ -227,43 +142,48 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '500'
  *                 message:
  *                   type: string
- *                 error:
- *                   type: string
+ *                   example: 'Failed to retrieve post'
  */
+
 
 
 /**
  * @swagger
- * /Blog/API/post/{id}:
+ * /Blog/API/post/update/{id}:
  *   put:
- *     summary: Update a post by ID
- *     tags:
- *       - Post
+ *     summary: Update a post
+ *     tags: [Post]
  *     security:
  *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
- *         description: Post ID
- *       - in: formData
- *         name: Post_Image
- *         type: file
- *         description: Post Image
- *       - in: formData
- *         name: Post_Title
- *         type: string
- *         description: New Post Title
- *       - in: formData
- *         name: Post_Content
- *         type: string
- *         description: New Post Content
+ *         required: true
+ *         description: ID of the post to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Post_Image:
+ *                 type: string
+ *                 format: binary
+ *                 description: The updated image for the post (optional)
+ *               Post_Title:
+ *                 type: string
+ *                 description: Updated title of the post
+ *               Post_Content:
+ *                 type: string
+ *                 description: Updated content of the post
  *     responses:
- *       200:
+ *       '201':
  *         description: Post updated successfully
  *         content:
  *           application/json:
@@ -272,32 +192,12 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '201'
  *                 message:
  *                   type: string
- *                 data:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                     Post_Image:
- *                       type: string
- *                     Post_Title:
- *                       type: string
- *                     Post_Content:
- *                       type: string
- *                     Posted_On:
- *                       type: string
- *                     Posted_By:
- *                       type: object
- *                       properties:
- *                         _id:
- *                           type: string
- *                         First_Name:
- *                           type: string
- *                         Last_Name:
- *                           type: string
- *       404:
- *         description: Post not found
+ *                   example: 'Post Update success'
+ *       '400':
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
@@ -305,10 +205,12 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '400'
  *                 message:
  *                   type: string
- *       500:
- *         description: Failed to update post
+ *                   example: 'Post Title Exist in database Or other validation error'
+ *       '500':
+ *         description: Server error
  *         content:
  *           application/json:
  *             schema:
@@ -316,31 +218,30 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '500'
  *                 message:
  *                   type: string
- *                 error:
- *                   type: string
+ *                   example: 'Failed to update post'
  */
 
 
 /**
  * @swagger
- * /Blog/API/post/{id}:
+ * /Blog/API/post/delete/{id}:
  *   delete:
  *     summary: Delete a post by ID
- *     tags:
- *       - Post
+ *     tags: [Post]
  *     security:
  *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: string
- *         description: Post ID
+ *         required: true
+ *         description: ID of the post to delete
  *     responses:
- *       200:
+ *       '200':
  *         description: Post deleted successfully
  *         content:
  *           application/json:
@@ -349,9 +250,11 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '200'
  *                 message:
  *                   type: string
- *       404:
+ *                   example: 'Post Deleted Successfully'
+ *       '404':
  *         description: Post not found
  *         content:
  *           application/json:
@@ -360,10 +263,12 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '404'
  *                 message:
  *                   type: string
- *       500:
- *         description: Failed to delete post
+ *                   example: 'Post not found'
+ *       '500':
+ *         description: Server error
  *         content:
  *           application/json:
  *             schema:
@@ -371,10 +276,8 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '500'
  *                 message:
  *                   type: string
- *                 error:
- *                   type: string
+ *                   example: 'Error occurred while deleting post'
  */
-
-

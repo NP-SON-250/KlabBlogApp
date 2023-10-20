@@ -14,6 +14,12 @@ export const addComment = async (req, res) => {
       });
     }
     const {User_Comment} = req.body;
+    if(!User_Comment){
+      return res.status(400).json({
+        status:"400",
+        message:"User_Comment Feild Is Required",
+      });
+    }
     const comment = await Comments.create({
       Post_Id,
       Post_Commentor: user._id, 
@@ -54,29 +60,6 @@ export const getAllComments = async (req, res) => {
         status: "200",
         message: "Comments retrieved successfully",
         data: commentView,
-      });
-    } catch (error) {
-      return res.status(500).json({
-        status: "500",
-        message: "Failed to retrieve comments",
-        error: error.message,
-      });
-    }
-  };
-
- 
-  
-  // Get comments for a single user by ID
-export const getCommentsByUserId = async (req, res) => {
-    try {
-      const comments = await Comments.find({ User_ID: req.params.id })
-        .populate("User_ID", "First_Name Last_Name Email")
-        .populate("Post_Id", "Post_Title");
-  
-      return res.status(200).json({
-        status: "200",
-        message: "Comments retrieved successfully",
-        data: comments,
       });
     } catch (error) {
       return res.status(500).json({

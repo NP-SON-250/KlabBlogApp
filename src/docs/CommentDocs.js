@@ -1,27 +1,30 @@
 /**
  * @swagger
- * /Blog/API/comments:
+ * /Blog/API/comments/{Post_Id}:
  *   post:
  *     summary: Add a comment to a post
- *     tags:
- *       - Comment
+ *     tags: [Comment]
  *     security:
  *       - BearerAuth: []
- *     consumes:
- *       - multipart/form-data
  *     parameters:
- *       - in: formData
- *         name: User_Comment
- *         type: string
- *         required: true
- *         description: The comment text(optional)
- *       - in: formData
+ *       - in: path
  *         name: Post_Id
- *         type: string
+ *         schema:
+ *           type: string
  *         required: true
- *         description: ID of the post to comment on(optional)
+ *         description: ID of the post to add a comment to
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               User_Comment:
+ *                 type: string
+ *                 description: The content of the comment (optional)
  *     responses:
- *       201:
+ *       '201':
  *         description: Comment added successfully
  *         content:
  *           application/json:
@@ -30,12 +33,12 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '201'
  *                 message:
  *                   type: string
- *                 data:
- *                   type: object
- *       400:
- *         description: Invalid request or missing required fields
+ *                   example: 'Comment added successfully'
+ *       '404':
+ *         description: Post not found
  *         content:
  *           application/json:
  *             schema:
@@ -43,10 +46,12 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '404'
  *                 message:
  *                   type: string
- *       500:
- *         description: Failed to add comment
+ *                   example: 'Post ID Not Found'
+ *       '500':
+ *         description: Server error
  *         content:
  *           application/json:
  *             schema:
@@ -54,23 +59,23 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '500'
  *                 message:
  *                   type: string
- *                 error:
- *                   type: string
+ *                   example: 'Failed to add comment'
  */
+
 
 /**
  * @swagger
- * /Blog/API/allComments:
+ * /Blog/API/all/Comments:
  *   get:
- *     summary: Get all comments with user and post information
- *     tags:
- *       - Comment
+ *     summary: Get all comments
+ *     tags: [Comment]
  *     security:
  *       - BearerAuth: []
  *     responses:
- *       200:
+ *       '200':
  *         description: Comments retrieved successfully
  *         content:
  *           application/json:
@@ -79,30 +84,14 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '200'
  *                 message:
  *                   type: string
+ *                   example: 'Comments retrieved successfully'
  *                 data:
  *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       Comment_Date:
- *                         type: string
- *                         format: date-time
- *                       User_ID:
- *                         type: string
- *                         format: uuid
- *                       User_Name:
- *                         type: string
- *                       User_Email:
- *                         type: string
- *                       Post_Id:
- *                         type: string
- *                         format: uuid
- *                       User_Comment:
- *                         type: string
- *       500:
- *         description: Failed to retrieve comments
+ *       '500':
+ *         description: Server error
  *         content:
  *           application/json:
  *             schema:
@@ -110,9 +99,57 @@
  *               properties:
  *                 status:
  *                   type: string
+ *                   example: '500'
  *                 message:
  *                   type: string
- *                 error:
- *                   type: string
+ *                   example: 'Failed to retrieve comments'
  */
 
+
+
+
+/**
+ * @swagger
+ * /Blog/API/comments/post/{id}:
+ *   get:
+ *     summary: Get comments by post ID
+ *     tags: [Comment]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the post to get comments for
+ *     responses:
+ *       '200':
+ *         description: Comments retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: '200'
+ *                 message:
+ *                   type: string
+ *                   example: 'Comments retrieved successfully'
+ *                 data:
+ *                   type: array
+ *       '500':
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: '500'
+ *                 message:
+ *                   type: string
+ *                   example: 'Failed to retrieve comments'
+ */

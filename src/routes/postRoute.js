@@ -12,7 +12,7 @@ import {
 
 const postRoute = express.Router();
 
-postRoute.post("/create",Authorization,fileUpload.single("Post_Image"),createPost);
+postRoute.post("/post/create",Authorization,fileUpload.single("Post_Image"),createPost);
 postRoute.get("/post/get/all",getAllPosts);
 postRoute.get("/post/ge/:id",getPostById)
 postRoute.put("/post/update/:id", Authorization,fileUpload.single("Post_Image"), updatePost);

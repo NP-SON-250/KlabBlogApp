@@ -16,7 +16,7 @@ usersRoute.post("/signup",fileUpload.single("Profile"),SignUp);
 usersRoute.post("/login",fileUpload.single("Profile"), userLoginFunction);
 usersRoute.put("/users/update/:id",fileUpload.single("Profile"), userUpdate);
 usersRoute.delete("/users/delete/:id",Authorization,deleteUser);
-usersRoute.get("/users/view/all", Authorization,ViewUsers);
+usersRoute.get("/users/view/all", ViewUsers);
 usersRoute.get("/users/byId/:id",viewUserById);
 
 

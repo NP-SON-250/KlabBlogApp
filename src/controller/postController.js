@@ -9,13 +9,18 @@ export const createPost = async (req, res) => {
   try {
     const user = req.Users;
     const { Post_Image, Post_Title, Post_Content } = req.body;
-
+    if(!Post_Image || !Post_Title || !Post_Content){
+      return res.status(400).json({
+        status:"400",
+        message:"All Fields Are Required",
+      });
+    }
     const checkposttitle = await Posts.findOne({
       Post_Title: req.body.Post_Title,
     });
     if(checkposttitle){
-      return res.status(500).json({
-        status: "500",
+      return res.status(400).json({
+        status: "400",
         message: "Post Title Exist in database",
       })
     }
@@ -91,7 +96,8 @@ export const getPostById = async (req, res) => {
 };
 
 
-// Update a post by the user who created it
+// Update a post
+
 export const updatePost = async (req, res) =>{
   const { id } = req.params;
   try {
@@ -123,8 +129,8 @@ export const updatePost = async (req, res) =>{
     },
     {timestamps: true});
 
-    return res.status(200).json({
-     statusbar: "200",
+    return res.status(201).json({
+     statusbar: "201",
      message: "Post Update success",
 
    });

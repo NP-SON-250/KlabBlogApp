@@ -45,8 +45,8 @@ export const SignUp = async (req,res) =>{
           Password: hashedpass,
           Profile: updateProfile?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
       });
-      return res.status(200).json({
-        status: "200",
+      return res.status(201).json({
+        status: "201",
         message: "User Registered",
         data: registerUser,
       });
@@ -143,13 +143,6 @@ export const userUpdate = async (req, res) =>{
   const { id } = req.params;
   try {
   const {First_Name, Last_Name, Email, Password, Profile,Role} = req.body;
-  const verifyEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!verifyEmail.test(Email)) {
-          return res.status(400).json({
-              status: "400",
-              message: "Invalid Email format",
-          });
-      }
       const checkEmail = await Users.findOne({Email});
       if(checkEmail) {
         return res.status(400).json({
@@ -157,23 +150,13 @@ export const userUpdate = async (req, res) =>{
             message: "Email Used In Our Database",
         });
       }
-
-      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-      if (!passwordRegex.test(Password)) {
-          return res.status(400).json({
-              status: "400",
-              message: "Password should be at least 8 characters long and contain a mix of numbers and characters",
-          });
-      }
     let updateProfile;
-      const encryptpass = await bcrypt.genSalt(10);
-      const hashedpass = await bcrypt.hash(Password,encryptpass);
     if(req.file) updateProfile = await uploadToCloud(req.file, res);
     const userUpdate = await Users.findByIdAndUpdate(id, {
       First_Name,
       Last_Name,
       Email,
-      Password: hashedpass,
+      Password,
       Profile: updateProfile?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
       Role,
     })
