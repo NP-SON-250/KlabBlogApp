@@ -5,33 +5,33 @@ import { Schema } from "mongoose";
 // creating Users' model
 
 const userSchema = new Schema({
-    First_Name: {
+    firstName: {
         type: String,
         require: true
     },
-    Last_Name: {
+    lastName: {
         type: String,
         require: true
     },
-    Email: {
+    email: {
         type: String,
         require: true
     },
-    Password: {
+    password: {
         type: String,
         require: true
     },
-    Profile: {
+    profile: {
         type: String,
         require: false,
     },
-    Role: {
+    role: {
         type: String,
         enum: ["user", "admin"],
         default: "user"
     },
-    Registered_On: {type: Date, default: Date.now},
-    Created_Posts: [{
+    registeredOn: {type: Date, default: Date.now},
+    createdPosts: [{
         type: Schema.Types.ObjectId, ref: "posts"
     }]
 });

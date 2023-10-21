@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /Blog/API/comments/{Post_Id}:
+ * /Blog/API/comments/add/{postId}:
  *   post:
  *     summary: Add a comment to a post
  *     tags: [Comment]
@@ -8,7 +8,7 @@
  *       - BearerAuth: []
  *     parameters:
  *       - in: path
- *         name: Post_Id
+ *         name: postId
  *         schema:
  *           type: string
  *         required: true
@@ -20,7 +20,7 @@
  *           schema:
  *             type: object
  *             properties:
- *               User_Comment:
+ *               userComment:
  *                 type: string
  *                 description: The content of the comment (optional)
  *     responses:
@@ -68,7 +68,7 @@
 
 /**
  * @swagger
- * /Blog/API/all/Comments:
+ * /Blog/API/all/comments:
  *   get:
  *     summary: Get all comments
  *     tags: [Comment]
@@ -76,7 +76,7 @@
  *       - BearerAuth: []
  *     responses:
  *       '200':
- *         description: Comments retrieved successfully
+ *         description: comments retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -87,7 +87,7 @@
  *                   example: '200'
  *                 message:
  *                   type: string
- *                   example: 'Comments retrieved successfully'
+ *                   example: 'comments retrieved successfully'
  *                 data:
  *                   type: array
  *       '500':
@@ -110,7 +110,7 @@
 
 /**
  * @swagger
- * /Blog/API/comments/post/{id}:
+ * /Blog/API/all/comments/byPost/ID/{id}:
  *   get:
  *     summary: Get comments by post ID
  *     tags: [Comment]
@@ -125,7 +125,7 @@
  *         description: ID of the post to get comments for
  *     responses:
  *       '200':
- *         description: Comments retrieved successfully
+ *         description: comments retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -136,7 +136,7 @@
  *                   example: '200'
  *                 message:
  *                   type: string
- *                   example: 'Comments retrieved successfully'
+ *                   example: 'comments retrieved successfully'
  *                 data:
  *                   type: array
  *       '500':

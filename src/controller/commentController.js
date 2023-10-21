@@ -4,32 +4,26 @@ import Users from "../model/userModel";
 
 export const addComment = async (req, res) => {
   try {
-    const {Post_Id} = req.params;
+    const {postId} = req.params;
     const user = req.Users;
-    const checkBlog = await Posts.findById(Post_Id);
-    if(!checkBlog){
+    const checkPost = await Posts.findById(postId);
+    if(!checkPost){
       return res.status(404).json({
         status: "404",
-        message: "Post ID Not Found",
+        message: "Post not found",
       });
     }
-    const {User_Comment} = req.body;
-    if(!User_Comment){
-      return res.status(400).json({
-        status:"400",
-        message:"User_Comment Feild Is Required",
-      });
-    }
+    const {userComment} = req.body;
     const comment = await Comments.create({
-      Post_Id,
-      Post_Commentor: user._id, 
-      User_Comment,
+      postId,
+      postCommentor: user._id, 
+      userComment,
     });
 
     // Add the comment to the post's Comments array
     const updatePost = await Posts.findByIdAndUpdate(
-      Post_Id,
-      { $push: { Comments: comment._id } }, 
+      postId,
+      { $push: { comments: comment._id } }, 
       { new: true }
     );
 
@@ -41,7 +35,7 @@ export const addComment = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       status: "500",
-      message: "Failed to add comment",
+      message: "Failed to add a comment",
       error: error.message,
     });
   }
@@ -54,8 +48,7 @@ export const addComment = async (req, res) => {
 export const getAllComments = async (req, res) => {
     try {
       const commentView = await Comments.find()
-        // .populate("User_ID", "First_Name Last_Name Email Profile")
-        .populate("Post_Id", "Post_Title Post_Content Profile").populate("Post_Commentor", "First_Name Last_Name Profile")
+        .populate("postId", "postTitle postContent postImage").populate("postCommentor", "firstName lastName profile")
       return res.status(200).json({
         status: "200",
         message: "Comments retrieved successfully",
@@ -73,9 +66,9 @@ export const getAllComments = async (req, res) => {
   // Get comments on a post by Post ID
 export const getCommentsByPostId = async (req, res) => {
     try {
-      const comments = await Comments.find({ Post_Id: req.params.id })
-        .populate("User_ID", "First_Name Last_Name Email")
-        .populate("Post_Id", "Post_Title");
+      const comments = await Comments.find({ postId: req.params.id })
+        .populate("postCommentor", "firstName lastName email profilr")
+        .populate("postId", "Post_Title postContent postImage");
   
       return res.status(200).json({
         status: "200",

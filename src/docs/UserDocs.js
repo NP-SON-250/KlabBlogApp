@@ -18,24 +18,24 @@
  *           schema:
  *             type: object
  *             properties:
- *               Profile:
+ *               profile:
  *                 type: string
  *                 format: binary
  *                 description: The profile picture of the user (optional)
- *               First_Name:
+ *               firstName:
  *                 type: string
  *                 description: First name of the user
- *               Last_Name:
+ *               lastName:
  *                 type: string
  *                 description: Last name of the user
- *               Email:
+ *               email:
  *                 type: string
  *                 format: email
- *                 description: Email of the user
- *               Password:
+ *                 description: email of the user
+ *               password:
  *                 type: string
  *                 format: password
- *                 description: Password of the user (at least 8 characters, containing a mix of letters and numbers)
+ *                 description: password of the user (at least 8 characters, containing a mix of letters and numbers)
  *     responses:
  *       '200':
  *         description: User registered successfully
@@ -62,7 +62,7 @@
  *                   example: '400'
  *                 message:
  *                   type: string
- *                   example: 'Invalid Email format'
+ *                   example: 'Invalid email format'
  *       '500':
  *         description: Server error
  *         content:
@@ -92,14 +92,14 @@
  *           schema:
  *             type: object
  *             properties:
- *               Email:
+ *               email:
  *                 type: string
  *                 format: email
- *                 description: Email of the user
- *               Password:
+ *                 description: email of the user
+ *               password:
  *                 type: string
  *                 format: password
- *                 description: Password of the user
+ *                 description: password of the user
  *     responses:
  *       '200':
  *         description: User logged in successfully
@@ -129,7 +129,7 @@
  *                   example: '404'
  *                 message:
  *                   type: string
- *                   example: 'User Not Found Or Password Incorrect'
+ *                   example: 'User Not Found Or password Incorrect'
  *       '500':
  *         description: Server error
  *         content:
@@ -196,21 +196,21 @@
  *             schema:
  *               type: object
  *               properties:
- *                 Profile:
+ *                 profile:
  *                   type: string
  *                   example: http://example.com/profile_image.jpg
- *                 First_Name:
+ *                 firstName:
  *                   type: string
  *                   example: "User First name"
- *                 Last_Name:
+ *                 lastName:
  *                   type: string
  *                   example: "User Last name"
- *                 Email:
+ *                 email:
  *                   type: string
- *                   example: "User Email"
- *                 Password:
+ *                   example: "User email"
+ *                 password:
  *                   type: string
- *                   example: "User Password"
+ *                   example: "User password"
  *       404:
  *         description: User not found
  *         content:
@@ -247,25 +247,25 @@
  *           schema:
  *             type: object
  *             properties:
- *               Profile:
+ *               profile:
  *                 type: string
  *                 format: binary
  *                 description: The updated profile picture of the user (optional)
- *               First_Name:
+ *               firstName:
  *                 type: string
  *                 description: Updated first name of the user
- *               Last_Name:
+ *               lastName:
  *                 type: string
  *                 description: Updated last name of the user
- *               Email:
+ *               email:
  *                 type: string
  *                 format: email
  *                 description: Updated email of the user
- *               Password:
+ *               password:
  *                 type: string
  *                 format: password
  *                 description: Updated password of the user (at least 8 characters, containing a mix of letters and numbers)
- *               Role:
+ *               role:
  *                 type: string
  *                 enum: [user, admin]
  *                 description: Updated role of the user (optional)
@@ -295,7 +295,7 @@
  *                   example: '400'
  *                 message:
  *                   type: string
- *                   example: 'Invalid Email format Or other validation error'
+ *                   example: 'Invalid email format Or other validation error'
  *       '500':
  *         description: Server error
  *         content:

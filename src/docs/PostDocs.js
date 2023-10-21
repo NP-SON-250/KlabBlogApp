@@ -13,14 +13,14 @@
  *           schema:
  *             type: object
  *             properties:
- *               Post_Image:
+ *               postImage:
  *                 type: string
  *                 format: binary
  *                 description: The image for the post (optional)
- *               Post_Title:
+ *               postTitle:
  *                 type: string
  *                 description: Title of the post
- *               Post_Content:
+ *               postContent:
  *                 type: string
  *                 description: Content of the post
  *     responses:
@@ -73,7 +73,7 @@
  *     tags: [Post]
  *     responses:
  *       '200':
- *         description: Posts retrieved successfully
+ *         description: posts retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -95,7 +95,7 @@
 
 /**
  * @swagger
- * /Blog/API/post/ge/{id}:
+ * /Blog/API/post/get/{id}:
  *   get:
  *     summary: Get a specific post by ID
  *     tags: [Post]
@@ -172,14 +172,14 @@
  *           schema:
  *             type: object
  *             properties:
- *               Post_Image:
+ *               postImage:
  *                 type: string
  *                 format: binary
  *                 description: The updated image for the post (optional)
- *               Post_Title:
+ *               postTitle:
  *                 type: string
  *                 description: Updated title of the post
- *               Post_Content:
+ *               postContent:
  *                 type: string
  *                 description: Updated content of the post
  *     responses:

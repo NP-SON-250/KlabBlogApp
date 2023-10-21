@@ -8,37 +8,37 @@ import { uploadToCloud } from "../helper/cloud";
 export const createPost = async (req, res) => {
   try {
     const user = req.Users;
-    const { Post_Image, Post_Title, Post_Content } = req.body;
-    if(!Post_Image || !Post_Title || !Post_Content){
+    const { postImage, postTitle, postContent } = req.body;
+    if(!postTitle || !postContent){
       return res.status(400).json({
         status:"400",
         message:"All Fields Are Required",
       });
     }
     const checkposttitle = await Posts.findOne({
-      Post_Title: req.body.Post_Title,
+      postTitle: req.body.postTitle,
     });
     if(checkposttitle){
-      return res.status(400).json({
-        status: "400",
+      return res.status(500).json({
+        status: "500",
         message: "Post Title Exist in database",
       })
     }
 
-    let userReg;
-      if(req.file) userReg = await uploadToCloud(req.file, res);
+    let savePostImage;
+      if(req.file) savePostImage = await uploadToCloud(req.file, res);
 
     const post = await Posts.create({
-      Post_Image: userReg?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
-      Post_Title,
-      Post_Content,
-      Posted_By: user._id, 
+      postImage: savePostImage?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
+      postTitle,
+      postContent,
+      postedBy: user._id, 
     });
 
     // Add the created post to the user's Created_Posts field
     await Users.findByIdAndUpdate(
       req.Users._id,
-      { $push: { Created_Posts: post._id } },
+      { $push: { createdPosts: post._id } },
       { new: true }
     );
 
@@ -60,7 +60,7 @@ export const createPost = async (req, res) => {
 export const getAllPosts = async (req, res) => {
   try {
     const posts = await Posts.find({})
-      .populate('Posted_By', 'First_Name Last_Name Profile').populate({path:"Comments",populate:{path: "Post_Commentor", select: "First_Name Last_Name Email Profile"}})
+      .populate('postedBy', 'firstName lastName profile').populate({path:"comments",populate:{path: "postCommentor", select: "firstName lastName email profile"}});
       
     res.json(posts);
   } catch (error) {
@@ -72,7 +72,7 @@ export const getAllPosts = async (req, res) => {
 // Get a specific post by ID
 export const getPostById = async (req, res) => {
   try {
-    const post = await Posts.findById(req.params.id).populate("Posted_By", "First_Name Last_Name").populate({path:"Comments",populate:{path: "Post_Commentor", select: "First_Name Last_Name Email Profile"}});
+    const post = await Posts.findById(req.params.id).populate("postedBy", "firstName lastName profile").populate({path:"comments",populate:{path: "postCommentor", select: "firstName lastName email profile"}});
 
     if (!post) {
       return res.status(404).json({
@@ -96,49 +96,47 @@ export const getPostById = async (req, res) => {
 };
 
 
-// Update a post
-
+// Update a post by the user who created it
 export const updatePost = async (req, res) =>{
   const { id } = req.params;
   try {
   const user = req.Users;
-  const { Post_Image, Post_Title, Post_Content } = req.body;
+  const { postImage, postTitle, postContent } = req.body;
   const getId = await Posts.findById(id);
   if (!getId)
     return res.status(404).json({
       status: "404",
-      message: "Id not Found",
+      message: "Post ID not found",
       
     });
     const checposttitle = await Posts.findOne({
-      Post_Title: req.body.Post_Title,
+      postTitle: req.body.postTitle,
    });
    if(checposttitle){
      return res.status(500).json({
        status: "500",
-       message: "Post Title Exist in database",
+       message: "Post title exist in database",
      })
    }
-    let result;
-    if(req.file) result = await uploadToCloud(req.file, res);
+    let updatePastImage;
+    if(req.file) updatePastImage = await uploadToCloud(req.file, res);
     const postUpdate = await Posts.findByIdAndUpdate(id, {
-      Post_Image:  result?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
-      Post_Title,
-      Post_Content, 
-      Posted_By: user._id,
-    },
-    {timestamps: true});
+      postImage:  updatePastImage?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
+      postTitle,
+      postContent, 
+      postedBy: user._id,
+    });
 
-    return res.status(201).json({
-     statusbar: "201",
-     message: "Post Update success",
+    return res.status(200).json({
+     statusbar: "200",
+     message: "Post updated successfully",
 
    });
  
 } catch (error) {
  return res.status(500).json({
    statusbar: "500",
-   message: "Failded to Update Post",
+   message: "Failded to update post",
    error: error.message
  })
  
@@ -155,25 +153,25 @@ export const deletePost = async (req, res) =>{
     if (!findPost) {
       return res.status(404).json({
         statusbar: "404",
-        message: "Blog Id Not Found",
+        message: "Post not found",
       });
     }
 
     // Delete comments associated with the post
-    const findPostInComment = await Comments.deleteMany({ Post_Id: id });
+    const findPostInCommentAndDelete = await Comments.deleteMany({ postId: id });
 
     // Delete the post itself
     const deletedPost = await Posts.findByIdAndDelete(id);
 
     return res.status(200).json({
       statusbar: "200",
-      message: "Blog Deleted Successfully",
+      message: "Post deleted successfully",
       data: deletedPost,
     });
   } catch (error) {
     return res.status(500).json({
       statusbar: "500",
-      message: "Error Occurred",
+      message: "Failed to delete post",
       error: error.message,
     });
   }

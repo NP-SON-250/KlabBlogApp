@@ -10,6 +10,7 @@ import swaggerJSDoc from "swagger-jsdoc";
 import usersRoute from "./routes/userRoute";
 import postRoute from "./routes/postRoute";
 import commentRoute from "./routes/commentRoute";
+const contactRouter = require('./routes/contactRoute');
 
 const app = express();
 dotenv.config();
@@ -36,8 +37,8 @@ const options ={
     },
     servers:[
       {
-        // url: 'https://klab-blog-api.onrender.com/'
-        url: 'http://localhost:4100'
+       
+        url: 'http://localhost:4000'
       }
     ],
     security: [
@@ -60,7 +61,7 @@ const options ={
 }
 const swaggerSpec = swaggerJSDoc(options)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-
+app.use('/uploads', express.static('uploads')); 
 
 // Require app to use imported configurations
 
@@ -73,6 +74,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/Blog/API", usersRoute);
 app.use("/Blog/API",postRoute);
 app.use("/Blog/API", commentRoute);
+app.use('/Blog/API', contactRouter);
 
 app.get("/", (req, res) => {
   res.status(200).json({

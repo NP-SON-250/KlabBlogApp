@@ -1,22 +1,22 @@
 import express from "express";
-import Authorization from "../middleware/Authentication";
+import {adminAuthorization, normalUserAuthentication} from "../middleware/Authentication";
 import { 
-    SignUp,
+    signUp,
     userLoginFunction,
     deleteUser,
     userUpdate,
-    ViewUsers,
+    viewUsers,
     viewUserById,
  } from "../controller/userController";
 import fileUpload from "../helper/multer";
 // import NormaalAuthorise from "../middleware/NormalUserAuthentication";
 
 const usersRoute = express.Router();
-usersRoute.post("/signup",fileUpload.single("Profile"),SignUp);
-usersRoute.post("/login",fileUpload.single("Profile"), userLoginFunction);
-usersRoute.put("/users/update/:id",fileUpload.single("Profile"), userUpdate);
-usersRoute.delete("/users/delete/:id",Authorization,deleteUser);
-usersRoute.get("/users/view/all", ViewUsers);
+usersRoute.post("/signup",fileUpload.single("profile"),signUp);
+usersRoute.post("/login",fileUpload.single("profile"), userLoginFunction);
+usersRoute.put("/users/update/:id",fileUpload.single("profile"), userUpdate);
+usersRoute.delete("/users/delete/:id",adminAuthorization,deleteUser);
+usersRoute.get("/users/view/all",viewUsers);
 usersRoute.get("/users/byId/:id",viewUserById);
 
 
