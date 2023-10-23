@@ -1,6 +1,5 @@
 const express = require('express');
 const multer = require('multer');
-import fileUpload from '../helper/multer';
 const contactController = require('../controller/contactController');
 
 const router = express.Router();

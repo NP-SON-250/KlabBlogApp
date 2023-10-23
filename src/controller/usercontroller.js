@@ -148,28 +148,7 @@ export const userUpdate = async (req, res) =>{
   const { id } = req.params;
   try {
   const {firstName, lastName, email, password, profile,role} = req.body;
-  const verifyEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!verifyEmail.test(email)) {
-          return res.status(400).json({
-              status: "400",
-              message: "Invalid Email format",
-          });
-      }
-      const checkEmail = await Users.findOne({email});
-      if(checkEmail) {
-        return res.status(400).json({
-            status: "400",
-            message: "Email Used In Our Database",
-        });
-      }
-
-      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-      if (!passwordRegex.test(password)) {
-          return res.status(400).json({
-              status: "400",
-              message: "Password should be at least 8 characters long and contain a mix of numbers and characters",
-          });
-      }
+  
     let updateProfile;
       const encryptpass = await bcrypt.genSalt(10);
       const hashedpass = await bcrypt.hash(password,encryptpass);

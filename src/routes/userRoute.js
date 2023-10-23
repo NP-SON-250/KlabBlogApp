@@ -1,5 +1,5 @@
 import express from "express";
-import {adminAuthorization, normalUserAuthentication} from "../middleware/Authentication";
+import {adminAuthorization} from "../middleware/Authentication";
 import { 
     signUp,
     userLoginFunction,
@@ -9,7 +9,7 @@ import {
     viewUserById,
  } from "../controller/userController";
 import fileUpload from "../helper/multer";
-// import NormaalAuthorise from "../middleware/NormalUserAuthentication";
+
 
 const usersRoute = express.Router();
 usersRoute.post("/signup",fileUpload.single("profile"),signUp);
