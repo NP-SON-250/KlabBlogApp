@@ -148,7 +148,15 @@ export const userUpdate = async (req, res) =>{
   const { id } = req.params;
   try {
   const {firstName, lastName, email, password, profile,role} = req.body;
-  
+  const checkEmail = await Users.findOne({email});
+      if(checkEmail) {
+        if(checkEmail._id != id){
+          return res.status(400).json({
+            status: "400",
+            message: "Email Used In Our Database",
+        })
+        }
+      }
     let updateProfile;
       const encryptpass = await bcrypt.genSalt(10);
       const hashedpass = await bcrypt.hash(password,encryptpass);

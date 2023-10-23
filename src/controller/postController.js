@@ -109,7 +109,17 @@ export const updatePost = async (req, res) =>{
       message: "Post ID not found",
       
     });
-    
+    const checposttitle = await Posts.findOne({
+      postTitle: req.body.postTitle,
+   });
+   if(checposttitle){
+     if(checposttitle._id != id){
+      return res.status(500).json({
+        status: "500",
+        message: "Post title exist in database",
+      })
+     }
+   }
     let updatePastImage;
     if(req.file) updatePastImage = await uploadToCloud(req.file, res);
     const postUpdate = await Posts.findByIdAndUpdate(id, {

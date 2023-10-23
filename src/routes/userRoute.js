@@ -1,13 +1,13 @@
 import express from "express";
 import {adminAuthorization} from "../middleware/Authentication";
-import { 
+import {
     signUp,
     userLoginFunction,
-    deleteUser,
     userUpdate,
+    deleteUser,
     viewUsers,
     viewUserById,
- } from "../controller/userController";
+} from "../controller/userController";
 import fileUpload from "../helper/multer";
 
 //define route
