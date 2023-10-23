@@ -38,7 +38,7 @@ const options ={
     servers:[
       {
        
-        url: 'http://localhost:4000'
+        url: 'https://klab-blog-api.onrender.com/'
       }
     ],
     security: [
