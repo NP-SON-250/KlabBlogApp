@@ -5,7 +5,7 @@ import { uploadToCloud } from "../helper/cloud";
 import Jwt from "jsonwebtoken";
 import bcrypt, {genSalt, hash} from "bcrypt";
 
-//user registration
+//user registration side
 
 export const signUp = async (req,res) =>{
     try {
