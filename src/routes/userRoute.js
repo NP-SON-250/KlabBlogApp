@@ -10,7 +10,7 @@ import {
  } from "../controller/userController";
 import fileUpload from "../helper/multer";
 
-
+//define route
 const usersRoute = express.Router();
 usersRoute.post("/signup",fileUpload.single("profile"),signUp);
 usersRoute.post("/login",fileUpload.single("profile"), userLoginFunction);
