@@ -11,7 +11,7 @@ cloudinary.config({
 export const uploadToCloud = async (file, res) => {
   try {
     const profilePicture = await cloudinary.uploader.upload(file.path, {
-      folder: "Blissmothies",
+      folder: "KlabTasks",
       use_filename: true,
     });
     return profilePicture;

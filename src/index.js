@@ -6,10 +6,14 @@ import cors from "cors";
 import mongoose from "mongoose";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
-//Import routes
-import blogRoutes from "./routes/blogRoutes";
-import userRoute from "./routes/userroutes";
-import contactRouter from "./routes/contactRoutes";
+
+import usersRoute from "./routes/userRoute";
+import postRoute from "./routes/postRoute";
+import commentRoute from "./routes/commentRoute";
+const contactRouter = require('./routes/contactRoute');
+
+const app = express();
+dotenv.config();
 
 mongoose.set("strictQuery", false);
 
@@ -20,8 +24,7 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-const app = express();
-dotenv.config();
+
 
 //Documentation Side
 
@@ -29,12 +32,13 @@ const options ={
   definition: {
     openapi : '3.0.0',
     info : {
-      title: 'Node JS And Mongo DB Klab Blog Api Project',
+      title: 'Klab Blog API Node JS',
       version: '1.0.0'
     },
     servers:[
       {
-        url: 'https://klab-blog-api.onrender.com/'
+       
+        url: 'http://localhost:4000'
       }
     ],
     security: [
@@ -53,11 +57,11 @@ const options ={
     }
   },
 
-  apis: ['./src/Docs/*.js'], //determination of path
+  apis: ['./src/docs/*.js'], //determination of path
 }
 const swaggerSpec = swaggerJSDoc(options)
-app.use('/Docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+app.use('/uploads', express.static('uploads')); 
 
 // Require app to use imported configurations
 
@@ -66,15 +70,16 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-//Routes
+// //Routes
+app.use("/Blog/API", usersRoute);
+app.use("/Blog/API",postRoute);
+app.use("/Blog/API", commentRoute);
+app.use('/Blog/API', contactRouter);
 
-app.use("/api/klab/blog", blogRoutes);
-app.use("/api/klab/user", userRoute);
-app.use("api/klab/contact", contactRouter);
 app.get("/", (req, res) => {
   res.status(200).json({
     status: "200",
-    author: "Alexis",
+    author: "Alexis Hakizimana",
     message: "Welcome To Blog API",
   });
 });

@@ -1,186 +1,209 @@
-import userModel from "../modules/users";
+import Users from "../model/userModel";
+import Posts from "../model/postModel";
+import Comments from "../model/commentModel";
 import { uploadToCloud } from "../helper/cloud";
-import Jwt  from "jsonwebtoken";
+import Jwt from "jsonwebtoken";
 import bcrypt, {genSalt, hash} from "bcrypt";
 
-//Registering User
+//user registration
 
-export const userSignUp = async (req, res) =>{
+export const signUp = async (req,res) =>{
     try {
-        const {First_Name,Last_Name, email, Password, Profile} = req.body;
-        const userEmail = await userModel.findOne({
-          email: req.body.email,
-        });
-        if(userEmail){
-          return res.status(500).json({
-            status: "500",
-            message: "Email Exist in database",
-          })
+        const {firstName, lastName,email,password,profile} = req.body;
+        if(!firstName || !lastName || !email || !password){
+          return res.status(400).json({
+            status:"400",
+            message:"All Fields Are Required",
+          });
         }
-        let userReg;
-        if(req.file) userReg = await uploadToCloud(req.file, res);
-        const encryptpass = await bcrypt.genSalt(10);
-        const hashedpass = await bcrypt.hash(Password,encryptpass);
-        const userRegister = await userModel.create({
-            First_Name,
-            Last_Name,
-            email,
-            Password: hashedpass,
-            Profile: userReg?.secure_url,
+        const verifyEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!verifyEmail.test(email)) {
+          return res.status(400).json({
+              status: "400",
+              message: "Invalid Email format",
+          });
+      }
+      const checkEmail = await Users.findOne({email});
+      if(checkEmail) {
+        return res.status(400).json({
+            status: "400",
+            message: "Email Used In Our Database",
         });
-        return res.status(201).json({
-            status: "201",
-            message: "User Registration Success",
-            data: userRegister,
-        });
-        
+      }
+
+      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      if (!passwordRegex.test(password)) {
+          return res.status(400).json({
+              status: "400",
+              message: "Password should be at least 8 characters long and contain a mix of numbers and characters",
+          });
+      }
+
+      let saveProfile;
+      if(req.file) saveProfile = await uploadToCloud(req.file, res);
+      const encryptpass = await bcrypt.genSalt(10);
+      const hashedpass = await bcrypt.hash(password, encryptpass);
+      const registerUser = await Users.create({
+          firstName,
+          lastName,
+          email,
+          password: hashedpass,
+          profile: saveProfile?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
+      });
+      return res.status(200).json({
+        status: "200",
+        message: "User Registered",
+        data: registerUser,
+      });
+
     } catch (error) {
         return res.status(500).json({
             status: "500",
-            message: "User registration failed",
-            error: error.message,
+            message: "Failed to proceed registration",
+            error:error.message,
         });
-        
     }
 };
 
 //Login Page
 
 export const userLoginFunction = async (req, res) => {
-  try {
-    const userLogin =await userModel.findOne({
-      email: req.body.email,
-    });
-    if(!userLogin){
-      return res.status(404).json({
-        status: "404",
-        message: "User Not Found",
-      });
-    }
-    const isMatch = await bcrypt.compare(req.body.Password, userLogin.Password);
-    if(!isMatch){
-      return res.status(404).json({
-        status: "404",
-        message: "Password Incorrect",
-      });
-    }
-    const token = await Jwt.sign(
-      { id: userLogin._id},
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.EXPIREDTIME}
-    );
-    return res.status(200).json({
-      status: "200",
-      message: "User Login Succees",
-      users: userLogin,
-      token: token,
-    })
-  } catch (error) {
-    return res.status(500).json({
-      status: "500",
-      message: "Login Failed",
-      error: error.message,
-    });
-  }
-}
-
-// Read Registered User
-
-export const viewAllUsers = async (req,res) =>{
     try {
-      const getAllUsersInfo = await userModel.find();
+      const userLogin = await Users.findOne({
+        email: req.body.email,
+      });
+      if(!userLogin){
+        return res.status(404).json({
+          status: "404",
+          message: "User Not Found",
+        });
+      }
+      const isMatch = await bcrypt.compare(req.body.password, userLogin.password);
+      if(!isMatch){
+        return res.status(404).json({
+          status: "404",
+          message: "Password Incorrect",
+        });
+      }
+      const token = await Jwt.sign(
+        { id: userLogin._id},
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.EXPIREDTIME}
+      );
       return res.status(200).json({
         status: "200",
-        message: "Data about all users are here:",
-        data: getAllUsersInfo,
+        message: "User Login Succees",
+        users: userLogin,
+        token: token,
       })
     } catch (error) {
       return res.status(500).json({
-        statusbar: "500",
-        message: "failed To Display Users Information",
+        status: "500",
+        message: "Login Failed",
         error: error.message,
-  
       });
-      
     }
   };
 
-  // Updating Users' Information
 
-  export const userUpdate = async (req, res) =>{
-    const { id } = req.params;
+  export const viewUsers = async (req, res) => {
     try {
-    const {First_Name, Last_Name, email, Password, Profile,role} = req.body;
-    const getId = await userModel.findById(id);
-    if (!getId)
-      return res.status(404).json({
-        satus:"404",
-        message: "User Id Not Found",
-        
-      });
-
-      const userEmail = await userModel.findOne({
-        email: req.body.email,
-      });
-      if(userEmail){
-        return res.status(500).json({
-          status: "500",
-          message: "Email Exist in database",
-        })
+      const users = await Users.find()
+        .populate('createdPosts', 'postTitle postContent postImage');
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+  
+  
+  // Get a specific user by ID
+  export const viewUserById = async (req, res) => {
+    try {
+      const user = await Users.findById(req.params.id).populate('createdPosts', 'postTitle postContent postImage');
+      res.json(user);
+      if (!user) {
+        return res.status(404).json({
+          status: "404",
+          message: "User not found",
+        });
       }
-      let result;
-        const encryptpass = await bcrypt.genSalt(10);
-        const hashedpass = await bcrypt.hash(Password,encryptpass);
-      if(req.file) result = await uploadToCloud(req.file, res);
-      const userUpdate = await userModel.findByIdAndUpdate(id, {
-        First_Name,
-        Last_Name, 
-        email,
-        Password: hashedpass,
-        Profile:  result?.secure_url,
-        role,
-      })
- 
+  
       return res.status(200).json({
-       statusbar: "200",
-       message: "User Update succeed",
+        status: "200",
+        message: "User retrieved successfully",
+        data: post,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: "500",
+        message: "Failed to retrieve a User",
+        error: error.message,
+      });
+    }
+  };
+
+//update user
+export const userUpdate = async (req, res) =>{
+  const { id } = req.params;
+  try {
+  const {firstName, lastName, email, password, profile,role} = req.body;
+  
+    let updateProfile;
+      const encryptpass = await bcrypt.genSalt(10);
+      const hashedpass = await bcrypt.hash(password,encryptpass);
+    if(req.file) updateProfile = await uploadToCloud(req.file, res);
+    const userUpdate = await Users.findByIdAndUpdate(id, {
+      firstName,
+      lastName,
+      email,
+      password: hashedpass,
+      profile: updateProfile?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
+      role,
+    })
+
+    return res.status(200).json({
+     statusbar: "200",
+     message: "User Update succeed",
+
+   });
  
-     });
-   
-  } catch (error) {
-   return res.status(500).json({
-     statusbar: "500",
-     message: "Failded to Update User Data",
-     error: error.message
-   })
-   
-  }
- };
+} catch (error) {
+ return res.status(500).json({
+   statusbar: "500",
+   message: "Failded to Update User Data",
+   error: error.message
+ })
+ 
+}
+};
+// delete user
 
- // delete user
 
- export const deleteUserById = async (req, res) =>{
+export const deleteUser = async (req, res) =>{
   try {
     const {id} = req.params;
-    const findid = await userModel.findById(id);
-    if(!findid)
-    return res.status(404).json({
-      statusbar: "404",
-      message: "User Id Not Found",
-});
-const deletefoundid = await userModel.findByIdAndDelete(id);
-return res.status(200).json({
-  statusbar: "200",
-  message: "User Deleted Successfully",
-  data: deletefoundid,
-});
+
+    // Find the user by ID
+    const findUser = await Users.findById(id);
+    if (!findUser) {
+      return res.status(404).json({
+        statusbar: "404",
+        message: "User not found",
+      });
+    };
+    const deletedUser = await Users.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      statusbar: "200",
+      message: "User deleted successfully",
+      data: deletedUser,
+    });
   } catch (error) {
     return res.status(500).json({
       statusbar: "500",
-      message: "Error Occured",
+      message: "Error occurred",
       error: error.message,
-  
     });
-    
   }
 };

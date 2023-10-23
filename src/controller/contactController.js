@@ -1,122 +1,42 @@
-import ContactTable from "../modules/contactModel";
-import { sendMail } from "../helper/sendEmail"; 
+const Contact = require('../model/contactModel');
+const nodemailer = require('nodemailer');
 
-export const createMessage = async (req,res) =>{
-    try {
-        const { Name, Email, Subject, Message } = req.body;
-
-        const sendMessage = await ContactTable.create({
-            Name,
-            Email,
-            Subject,
-            Message,
-        });
-
-        const emailTemplate = {
-            emailTo: Email,
-            subject: Subject,
-            message: `<h2>Dear ${Name},</h2> <br/> This is to inform you that we have received your feedback about our service.
-            <h4>Thank you so much!!</h4>
-            <p>Good luck</p>
-            <p>Alexis HAKIZIMANA<p>
-            <h5>Trainee at Klab C4</h5><br/>`,
-        };
-
-        await sendMail(emailTemplate); // Use await here
-
-        return res.status(200).json({
-            status: "200",
-            message: "Message Sent",
-            data: sendMessage,
-        });
-    } catch (error) {
-        return res.status(500).json({
-            status: "500",
-            message: "Email Sending Failed",
-            error: error.message,
-        });
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+ auth: {
+        user: "klabc4.2000@gmail.com",
+        pass: "wucnfrpzenjaxogl"
     }
-};
+});
 
+exports.sendContactMessage = async (req, res) => {
+  const { name, email, message } = req.body;
+  const attachment = req.file ? req.file.path : null;
 
+  const newContact = new Contact({ name, email, message, attachment });
 
-// reading all messages
+  try {
+    await newContact.save();
 
-export const readAllMessage = async (req, res) =>{
-    try {
-        
-        const readMessage = await ContactTable.find();
-        return res.status(200).json({
-            status: "200",
-            message: "This is all messages",
-            data: readMessage,
-        })
-    } catch (error) {
-        return res.status(500).json({
-            status: "500",
-            message: "Failed to retreive Message",
-            error: error.message,
-        });
-        
-    }
-};
+    const mailOptions = {
+      from: 'klabc4.2000@gmail.com', 
+      to: 'hakizimanaalexis123@gmail.com', 
+      subject: 'Klab user contact message',
+      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+      attachments: attachment ? [{ path: attachment }] : [], // Attach file if it was uploaded
+    };
 
-// reading message by its id
-
-
-export const readSingleMessage = async (req, res) =>{
-    try {
-        const { id } = req.params;
-        const readSingle = await ContactTable.findById(id);
-        if(!readSingle){
-            return res.status(404).json({
-                status: "404",
-                message: "Message ID Not Found",
-
-            });
-        }
-        return res.status(200).json({
-            status: "200",
-            message: "This Is Message Related to Entered ID:",
-            data: readSingle,
-        });
-        
-    } catch (error) {
-        return res.status(500).json({
-            status: "500",
-            message: "Failed to Read Message With Entered ID",
-            error: error.message,
-        });
-        
-    }
-};
-
-// deleting message by only Admin
-
-
-export const deleteMessage = async (req, res) =>{
-    try {
-        const { id} = req.params;
-    const readid = await ContactTable.findById(id);
-    if(!readid){
-        return res.status(404).json({
-            status: "404",
-            message: "Message ID Not Found",
-        });
-
-    }
-    const deleteDat = await ContactTable.findByIdAndDelete(id);
-    return res.status(200).json({
-        status: "200",
-        message: "Message Deleted Successfully",
-        data: deleteDat,
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        res.status(500).send('Error sending message');
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.status(200).send('Message sent successfully!');
+      }
     });
-    } catch (error) {
-        return res.status(500).json({
-            status: "500",
-            message: "Failed to delete message",
-            error: error.message,
-        });
-    }
-
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error sending message');
+  }
 };
