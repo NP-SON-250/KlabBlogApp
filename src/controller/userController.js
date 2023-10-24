@@ -157,8 +157,9 @@ export const userUpdate = async (req, res) =>{
         })
         }
       }
-    let updateProfile;
-      const encryptpass = await bcrypt.genSalt(10);
+      let updateProfile;
+      if(password){
+        const encryptpass = await bcrypt.genSalt(10);
       const hashedpass = await bcrypt.hash(password,encryptpass);
     if(req.file) updateProfile = await uploadToCloud(req.file, res);
     const userUpdate = await Users.findByIdAndUpdate(id, {
@@ -168,13 +169,28 @@ export const userUpdate = async (req, res) =>{
       password: hashedpass,
       profile: updateProfile?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
       role,
-    })
-
+    });
     return res.status(200).json({
-     statusbar: "200",
-     message: "User Update succeed",
-
-   });
+      statusbar: "200",
+      message: "User Update succeed",
+ 
+    });
+      }
+      else{
+        if(req.file) updateProfile = await uploadToCloud(req.file, res);
+    const userUpdate = await Users.findByIdAndUpdate(id, {
+      firstName,
+      lastName,
+      email,
+      profile: updateProfile?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
+      role,
+    });
+    return res.status(200).json({
+      statusbar: "200",
+      message: "User Update succeed",
+ 
+    });
+      }
  
 } catch (error) {
  return res.status(500).json({

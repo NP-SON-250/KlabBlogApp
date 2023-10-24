@@ -29,7 +29,7 @@ export const createPost = async (req, res) => {
       if(req.file) savePostImage = await uploadToCloud(req.file, res);
 
     const post = await Posts.create({
-      postImage: savePostImage?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
+      postImage: savePostImage?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1698131855/z3epyxo5ytlabbvegjiy.jpg",
       postTitle,
       postContent,
       postedBy: user._id, 
