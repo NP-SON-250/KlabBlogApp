@@ -5,7 +5,9 @@ import Users from "../model/userModel";
 export const addComment = async (req, res) => {
   try {
     const {postId} = req.params;
-    const user = req.Users;
+    const user = req.loggedInUser._id;
+    const {userComment} = req.body;
+   
     const checkPost = await Posts.findById(postId);
     if(!checkPost){
       return res.status(404).json({
@@ -13,10 +15,9 @@ export const addComment = async (req, res) => {
         message: "Post not found",
       });
     }
-    const {userComment} = req.body;
     const comment = await Comments.create({
       postId,
-      postCommentor: user._id, 
+      postCommentor: user, 
       userComment,
     });
 
