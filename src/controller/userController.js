@@ -39,16 +39,16 @@ export const signUp = async (req,res) =>{
           });
       }
 
-      let saveProfile;
-      if(req.file) saveProfile = await uploadToCloud(req.file, res);
-      const encryptpass = await bcrypt.genSalt(10);
-      const hashedpass = await bcrypt.hash(password, encryptpass);
+      let savedProfile;
+      if(req.file) savedProfile = await uploadToCloud(req.file, res);
+      const encryptPass = await bcrypt.genSalt(10);
+      const hashedPass = await bcrypt.hash(password, encryptPass);
       const registerUser = await Users.create({
           firstName,
           lastName,
           email,
-          password: hashedpass,
-          profile: saveProfile?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
+          password: hashedPass,
+          profile: savedProfile?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
       });
       return res.status(200).json({
         status: "200",
@@ -157,28 +157,44 @@ export const userUpdate = async (req, res) =>{
         })
         }
       }
-    let updateProfile;
-      const encryptpass = await bcrypt.genSalt(10);
-      const hashedpass = await bcrypt.hash(password,encryptpass);
-    if(req.file) updateProfile = await uploadToCloud(req.file, res);
+      let updatedProfile;
+      if(password){
+        const encryptPass = await bcrypt.genSalt(10);
+      const hashedPass = await bcrypt.hash(password,encryptPass);
+    if(req.file) updatedProfile = await uploadToCloud(req.file, res);
     const userUpdate = await Users.findByIdAndUpdate(id, {
       firstName,
       lastName,
       email,
-      password: hashedpass,
-      profile: updateProfile?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
+      password: hashedPass,
+      profile: updatedProfile?.secure_url,
       role,
-    })
-
+    });
     return res.status(200).json({
-     statusbar: "200",
-     message: "User Update succeed",
-
-   });
+      status: "200",
+      message: "User Update succeed",
+ 
+    });
+      }
+      else{
+        if(req.file) updatedProfile = await uploadToCloud(req.file, res);
+    const userUpdate = await Users.findByIdAndUpdate(id, {
+      firstName,
+      lastName,
+      email,
+      profile: updatedProfile?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
+      role,
+    });
+    return res.status(200).json({
+      status: "200",
+      message: "User Update succeed",
+ 
+    });
+      }
  
 } catch (error) {
  return res.status(500).json({
-   statusbar: "500",
+   status: "500",
    message: "Failded to Update User Data",
    error: error.message
  })
@@ -196,20 +212,20 @@ export const deleteUser = async (req, res) =>{
     const findUser = await Users.findById(id);
     if (!findUser) {
       return res.status(404).json({
-        statusbar: "404",
+        status: "404",
         message: "User not found",
       });
     };
     const deletedUser = await Users.findByIdAndDelete(id);
 
     return res.status(200).json({
-      statusbar: "200",
+      status: "200",
       message: "User deleted successfully",
       data: deletedUser,
     });
   } catch (error) {
     return res.status(500).json({
-      statusbar: "500",
+      status: "500",
       message: "Error occurred",
       error: error.message,
     });
