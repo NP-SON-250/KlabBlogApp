@@ -15,21 +15,21 @@ export const createPost = async (req, res) => {
         message:"All Fields Are Required",
       });
     }
-    const checkposttitle = await Posts.findOne({
+    const checkPostTitle = await Posts.findOne({
       postTitle: req.body.postTitle,
     });
-    if(checkposttitle){
+    if(checkPostTitle){
       return res.status(500).json({
         status: "500",
         message: "Post Title Exist in database",
       })
     }
 
-    let savePostImage;
-      if(req.file) savePostImage = await uploadToCloud(req.file, res);
+    let savedPostImage;
+      if(req.file) savedPostImage = await uploadToCloud(req.file, res);
 
     const post = await Posts.create({
-      postImage: savePostImage?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1698131855/z3epyxo5ytlabbvegjiy.jpg",
+      postImage: savedPostImage?.secure_url,
       postTitle,
       postContent,
       postedBy: user._id, 
@@ -109,21 +109,21 @@ export const updatePost = async (req, res) =>{
       message: "Post ID not found",
       
     });
-    const checposttitle = await Posts.findOne({
+    const checkPostTitle = await Posts.findOne({
       postTitle: req.body.postTitle,
    });
-   if(checposttitle){
-     if(checposttitle._id != id){
+   if(checkPostTitle){
+     if(checkPostTitle._id != id){
       return res.status(500).json({
         status: "500",
         message: "Post title exist in database",
       })
      }
    }
-    let updatePastImage;
-    if(req.file) updatePastImage = await uploadToCloud(req.file, res);
+    let updatedPastImage;
+    if(req.file) updatedPastImage = await uploadToCloud(req.file, res);
     const postUpdate = await Posts.findByIdAndUpdate(id, {
-      postImage:  updatePastImage?.secure_url || "https://res.cloudinary.com/da12yf0am/image/upload/v1696850499/pbxwlozt1po8vtbwyabc.jpg",
+      postImage:  updatedPastImage?.secure_url,
       postTitle,
       postContent, 
       postedBy: user._id,
