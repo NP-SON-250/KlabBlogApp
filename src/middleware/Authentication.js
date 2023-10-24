@@ -23,22 +23,22 @@ export const adminAuthorization = async (req, res, next) => {
     }
 
     const decoded = await Jwt.verify(token, process.env.JWT_SECRET);
-    const logedInUser = await Users.findById(decoded.id);
+    const loggedInUser = await Users.findById(decoded.id);
 
-    if (!logedInUser) {
+    if (!loggedInUser) {
       res.status(403).json({
         status: "403",
         message: "Token has expired. Please, login again",
       });
     }
 
-    if (logedInUser.role !== "admin") {
+    if (loggedInUser.role !== "admin") {
       res.status(401).json({
         status: "401",
         message: "Only admin can do this operation",
       });
     } else {
-      req.Users = logedInUser;
+      req.loggedInUser = loggedInUser;
       next();
     }
 
