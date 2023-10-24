@@ -7,7 +7,7 @@ import { uploadToCloud } from "../helper/cloud";
 // Create a new post
 export const createPost = async (req, res) => {
   try {
-    const user = req.Users;
+    const user = req.loggedInUser._id;
     const { postImage, postTitle, postContent } = req.body;
     if(!postTitle || !postContent){
       return res.status(400).json({
@@ -32,12 +32,12 @@ export const createPost = async (req, res) => {
       postImage: savedPostImage?.secure_url,
       postTitle,
       postContent,
-      postedBy: user._id, 
+      postedBy: user, 
     });
 
     // Add the created post to the user's Created_Posts field
     await Users.findByIdAndUpdate(
-      req.Users._id,
+      req.loggedInUser._id,
       { $push: { createdPosts: post._id } },
       { new: true }
     );
@@ -73,7 +73,11 @@ export const getAllPosts = async (req, res) => {
 export const getPostById = async (req, res) => {
   try {
     const post = await Posts.findById(req.params.id).populate("postedBy", "firstName lastName profile").populate({path:"comments",populate:{path: "postCommentor", select: "firstName lastName email profile"}});
-
+    const addView = await Posts.findByIdAndUpdate(req.params.id,{
+      $inc:{
+        views:1,
+      },
+    })
     if (!post) {
       return res.status(404).json({
         status: "404",
@@ -84,7 +88,7 @@ export const getPostById = async (req, res) => {
     return res.status(200).json({
       status: "200",
       message: "Post retrieved successfully",
-      data: post,
+      data: addView,
     });
   } catch (error) {
     return res.status(500).json({
@@ -100,7 +104,7 @@ export const getPostById = async (req, res) => {
 export const updatePost = async (req, res) =>{
   const { id } = req.params;
   try {
-  const user = req.Users;
+  const user = req.loggedInUser._id;
   const { postImage, postTitle, postContent } = req.body;
   const getId = await Posts.findById(id);
   if (!getId)
@@ -126,7 +130,7 @@ export const updatePost = async (req, res) =>{
       postImage:  updatedPastImage?.secure_url,
       postTitle,
       postContent, 
-      postedBy: user._id,
+      postedBy: user,
     });
 
     return res.status(200).json({

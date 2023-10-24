@@ -6,6 +6,10 @@ const postSchema = new mongoose.Schema({
     postContent:{type: String, require: true},
     postedBy: {type: mongoose.Schema.ObjectId, ref: 'users'},
     comments: [{type: mongoose.Schema.ObjectId, ref: 'comments'}],
+    views:{
+        type:Number,
+        default: 0
+    }
 });
 
 const Posts = mongoose.model('posts',postSchema);
