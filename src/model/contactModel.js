@@ -5,6 +5,6 @@ const contactSchema = new mongoose.Schema({
   email: String,
   message: String,
   attachment: String, 
-});
+},{timestamps: true});
 
 module.exports = mongoose.model('Contact', contactSchema);

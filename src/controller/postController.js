@@ -182,4 +182,122 @@ export const deletePost = async (req, res) =>{
     });
   }
 };
+ 
 
+// Like a post
+export const likePost = async (req, res) => {
+  const { id } = req.params;
+  const user = req.loggedInUser._id;
+  try {
+    const findPostId = await Posts.findById(id);
+    if (!findPostId) {
+      return res.status(404).json({
+        status: "404",
+        message: "Post not found",
+      });
+    }
+    // Check if the user has already disliked the post
+    const alreadyDisliked = findPostId.unLikedBy.includes(user);
+
+    if (alreadyDisliked) {
+      // Remove the user from the unLikedBy array
+      const findPostIdAndRemoveDislike = await Posts.findByIdAndUpdate(
+        id,
+        {
+          $inc: { unLike: -1 },
+          $pull: { unLikedBy: user }, // Remove the user from unLikedBy
+        },
+        { new: true }
+      );
+    }
+    
+    else {
+      // Check if the user has already liked the post
+      const alreadyLiked = findPostId.likedBy.includes(user);
+
+      if (alreadyLiked) {
+        return res.status(400).json({
+          status: "400",
+          message: "You have already liked this post",
+        });
+      }
+
+      const findPostIdAndLike = await Posts.findByIdAndUpdate(
+        id,
+        {
+          $inc: { likes: 1 },
+          $addToSet: { likedBy: user },
+        },
+        { new: true }
+      );
+
+      if (findPostIdAndLike) {
+        return res.status(200).json({
+          message: "Your like to this added",
+        });
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({
+      status: "500",
+      message: "Failed to add your like",
+      error: error.message,
+    });
+  }
+};
+
+// Un-like a post
+export const unLikePost = async (req, res) => {
+  const { id } = req.params;
+  const user = req.loggedInUser._id;
+  try {
+    const findPostId = await Posts.findById(id);
+    if (!findPostId) {
+      return res.status(404).json({
+        status: "404",
+        message: "Post not found",
+      });
+    }
+
+    // Check if the user has already liked the post
+    const alreadyLiked = findPostId.likedBy.includes(user);
+
+    if (alreadyLiked) {
+      return res.status(400).json({
+        status: "400",
+        message: "You have already liked this post. Cannot dislike it.",
+      });
+    }
+
+    // Check if the user has already disliked the post
+    const alreadyDisliked = findPostId.unLikedBy.includes(user);
+
+    if (alreadyDisliked) {
+      return res.status(400).json({
+        status: "400",
+        message: "You have already disliked this post",
+      });
+    }
+
+    const findPostIdAndUnLike = await Posts.findByIdAndUpdate(
+      id,
+      {
+        $inc: { unLike: 1 },
+        $addToSet: { unLikedBy: user },
+      },
+      { new: true }
+    );
+
+    if (findPostIdAndUnLike) {
+      return res.status(200).json({
+        message: "You disliked this post",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      status: "500",
+      message: "Failed to add your like",
+      error: error.message,
+    });
+  }
+};

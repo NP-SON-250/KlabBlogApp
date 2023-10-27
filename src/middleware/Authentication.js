@@ -15,7 +15,7 @@ export const adminAuthorization = async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1];
     }
 
-    if (!token) {
+    if (!token) { 
       res.status(401).json({
         status: "401",
         message: "You are not logged in. Please, login",

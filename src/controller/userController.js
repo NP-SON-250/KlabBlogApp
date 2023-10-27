@@ -132,7 +132,7 @@ export const userLoginFunction = async (req, res) => {
       return res.status(200).json({
         status: "200",
         message: "User retrieved successfully",
-        data: post,
+        data: user,
       });
     } catch (error) {
       return res.status(500).json({
