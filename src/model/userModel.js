@@ -30,8 +30,9 @@ const userSchema = new Schema({
         enum: ["user", "admin"],
         default: "user"
     },
-    registeredOn: {type: Date, default: Date.now},
-    
+    createdPosts: [{
+        type: Schema.Types.ObjectId, ref: "posts"
+    }]
 },{timestamps: true});
 const Users = mongoose.model('users',userSchema);
 export default Users;
