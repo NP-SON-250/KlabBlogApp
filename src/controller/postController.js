@@ -72,8 +72,9 @@ export const getAllPosts = async (req, res) => {
 // Get a specific post by ID
 export const getPostById = async (req, res) => {
   try {
-    const post = await Posts.findById(req.params.id).populate("postedBy", "firstName lastName profile").populate({path:"comments",populate:{path: "postCommentor", select: "firstName lastName email profile"}});
-    const addView = await Posts.findByIdAndUpdate(req.params.id,{
+    const {id} = req.params;
+    const post = await Posts.findById(id).populate("postedBy", "firstName lastName profile").populate({path:"comments",populate:{path: "postCommentor", select: "firstName lastName email profile"}});
+    const addView = await Posts.findByIdAndUpdate(id,{
       $inc:{
         views:1,
       },
@@ -88,7 +89,7 @@ export const getPostById = async (req, res) => {
     return res.status(200).json({
       status: "200",
       message: "Post retrieved successfully",
-      data: addView,
+      data: post,
     });
   } catch (error) {
     return res.status(500).json({
