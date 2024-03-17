@@ -13,6 +13,7 @@ export const addReply = async (req, res) =>{
             return res.status(400).json({
                 status: "400",
                 message: "Please, add a reply",
+                //Mine
             });
         };
         const findComentId = await Comments.findById(commentId);
